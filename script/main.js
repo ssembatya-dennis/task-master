@@ -166,12 +166,27 @@ taskList.addEventListener("click", (event) => {
   }
 
   if (completeButton) {
-    const index = parseInt(completeButton.getAttribute("data-index"));
-    tasks[index].isCompleted = !tasks[index].isCompleted; // toggle
-    renderTasks();
+    //// Old way
+    // const index = parseInt(completeButton.getAttribute("data-index"));
+    // tasks[index].isCompleted = !tasks[index].isCompleted; // toggle
+    // renderTasks();
 
-    return;
+    // new way
+    const index = parseInt(completeButton.getAttribute("data-index"));
+    tasks = tasks.map((task, i) => {
+      if (i === index) {
+        // Return a NEW Object, spreading the old one, but flipping 'isCompleted' property
+
+        return { ...task, isCompleted: !task.isCompleted };
+      }
+
+      return task; // Return the original object
+    });
+
+    renderTasks();
   }
+
+  return;
 });
 
 //clear all task
@@ -530,10 +545,66 @@ renderTasks();
 
 //// The solution (spread Operator - GOOD)
 
-const taskObj = { text: "Old Task", done: false };
+// const taskObj = { text: "Old Task", done: false };
 
-const updatedTaskObj = { ...taskObj, done: true }; // Creates a NEW Object
+// const updatedTaskObj = { ...taskObj, done: true }; // Creates a NEW Object
 
-console.log(taskObj); // OLD Obj (unchanged)
+// console.log(taskObj); // OLD Obj (unchanged)
 
-console.log(updatedTaskObj); // New Obj (updated Version)
+// console.log(updatedTaskObj); // New Obj (updated Version)
+
+// const letters = ["a", "b", "c", "d", "e"];
+
+// const pets = ["cat", "dog", "goat"];
+
+// // const fistLetter = letters[0];
+
+// // const secondLetter = letters[1];
+
+// const [firstArray, ...petsArray] = [letters, ...pets];
+
+// // [["a",  ], "cat"]
+
+// console.log(firstArray, petsArray);
+
+/////////////////// Lesson 6 - Fetching Data Asnc/ Await ////////////////////////////
+
+// [Your Website] --(request)---> [Twitter/weather/Google]
+
+// [Your Website] <--(Response)-- [Twitter/Google Api]
+
+// The Terminology
+
+// API (Application Programming Interface)
+
+// Endpoint (The Specific URL you ask for)
+
+// JSON (JavaScript Object Notation)
+
+////////////// Phase 1: Meet fetch() - The Delivery Driver
+
+// This does NOT give you the data directly yet. it gives you a "Promise"
+
+// const responsePromise = fetch("https://jsonplaceholder.typicode.com/todos");
+
+// console.log(responsePromise);
+
+/// Old school way
+
+// fetch("https://jsonplaceholder.typicode.com/todos")
+//   .then((response) => response.json())
+//   .then((data) => console.log(data));
+
+/// The modern way - Async/ Await
+
+async function fetchTodos() {
+  const response = await fetch("https://jsonplaceholder.typicode.com/todos");
+
+  const data = await response.json();
+
+  console.log(data);
+}
+
+// call it
+
+fetchTodos();
